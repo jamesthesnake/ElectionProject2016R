@@ -17,7 +17,7 @@ ui <-shinyUI(pageWithSidebar(
     selectInput("chooseStates","Choose state to view", selected = "North Carolina", c("Alabama","Alaska","Arkansas","Arizona","Connecticut","Colorado","California","Delaware","DC", "Florida","Georgia","Hawaii","Idaho","Illinois", "Indiana","Iowa", 
                                                                                       "Kansas","Kentucky","Louisiana","Maine","Maryland", "Massachusets", "Michigan", "Minnesota", "Mississippi","Missouri","Montanna","Neberaska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio","Oklahoma","Oregon","Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin",
                                                                                       "Wyoming")),
-    selectInput("whatData","Choose the data for state",c("drugs","2016Results","RomTrump","blackPop","PopDensity")),
+    selectInput("whatData","Choose the data for state",c("drugs","2016Results","2016ResultsCongress", "PVI","RomTrump","blackPop","PopDensity")),
     selectInput("whatFormat","Chooseformat to download map", c(".png",".pdf",".html")),
     checkboxInput("labelYes", "put Labels on the map"),
     checkboxInput("legendYes", "put a Legend on the map"),

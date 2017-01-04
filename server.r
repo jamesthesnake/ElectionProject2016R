@@ -11,7 +11,7 @@ server<-shinyServer(function(input, output){
   webshot::install_phantomjs()
   #IMPORT DATA
   output$text1<-renderText({ "research the 2016 election using custom metrics and color schemes"})
-  output$text2<-renderText({ "for the customt tab , select your area for data and see the heatmap on custom sdie wrok"})
+  output$text2<-renderText({ "for the customt tab , select your area for data and see the heatmap on custom slide work"})
   output$text3<-renderText({ "labels will be added in the label heatmap"})
   output$text4<-renderText({ "By James Hennessy and Benjamin Berger"})
   
@@ -26,6 +26,7 @@ server<-shinyServer(function(input, output){
   #IMPORT ELECTION DATA 2012
  
   st_fips <- read.csv("st_fips.csv")
+  
   #IMPORT AND MERGE DRUG DATA
   drugDeathBin <- function(x){
     if(x == "0-2") return(1)
@@ -62,11 +63,11 @@ server<-shinyServer(function(input, output){
     
   })
   getCongResults<-reactive({
-    kos<-read.csv("Results.csv")
+    kos<-read.csv("bigData.csv")
     statesAbv <- read.csv("statesAbv.csv")
-    names<-substr(kos$CD,1,2)
-    dist<-substr(kos$CD,4,5)
     
+    names<-substr(kos$Code,1,2)
+    dist<-substr(kos$Code,4,5)
     for(i in 1:length(names)){
       number<-statesAbv[which(names[i]==statesAbv$ABV),]$FIPS
       if(number<10){
@@ -88,8 +89,8 @@ server<-shinyServer(function(input, output){
         kos$CDdist[i]<-dist[i]
         
       }
-      if(!is.na(kos$Clinton.2016[i] )){
-      if((kos$Clinton.2016[i])<(kos$Trump.2016[i])){
+      if(!is.na(kos$Clinton16[i] )){
+      if((kos$Clinton16[i])<(kos$Trump16[i])){
         kos$newWinner[i]<-"TRUE"
       }
       else{
@@ -177,12 +178,12 @@ server<-shinyServer(function(input, output){
     congResults<-getCongResults()
     for(i in 1:length(cong)){
       index<-match(cong$NAME[i],congResults$CDfull)
-      cong$Incumbent[i]<-congResults$Incumbent[index]
+      cong$Incumbent[i]<-paste0(congResults$First_Name[index],congResults$Last_Name[index])
       cong$Party[i]<-congResults$Party[index]
-      cong$Csix[i]<-congResults$Clinton.2016[index]
-      cong$Tsix[i]<-congResults$Trump.2016[index]
-      cong$Ot[i]<-congResults$Obama.2012[index]
-      cong$Rt[i]<-congResults$Romney.2012[index]
+      cong$Csix[i]<-congResults$Clinton16[index]
+      cong$Tsix[i]<-congResults$Trump16[index]
+      cong$Ot[i]<-congResults$Obama12[index]
+      cong$Rt[i]<-congResults$Rom12[index]
       
     }
     data<-getData()
@@ -190,14 +191,31 @@ server<-shinyServer(function(input, output){
     data <- data[order(order(as.numeric(as.character(states$GEOID)))),]
     #color <- rep('blue',length(congResults))
     #color[congResults$newWinner=="TRUE"]<- 'red'
+    
     if (input$whatData == "RomTrump"){
       color <- colorBin(input$chooseColor, cong$Tsix , bins = 5)(cong$Tsix)
       
     }
-    else if(input$whatData=="2016Results"){
+    else if ( input$whatData == "2016Results"){
+      
+      color <- rep('green',length(congResults$Party))
+      color[which(congResults$newWinner == "TRUE")]<- 'red'   
+      color[which(congResults$newWinner == "FALSE")]<- 'blue'   
+      
+    }
+    else if(input$whatData=="2016ResultsCongress"){
       color <- rep('blue',length(congResults$Party))
-      print(congResults$Party)
-      color[which(congResults$Party == "(R)")]<- 'red'      
+      color[which(congResults$Party == "Republican")]<- 'red'      
+    }
+    else if(input$whatData=="PVI"){
+
+      color <- rep('black',length(congResults$Party))
+      color[which(congResults$PVI=="D+")]<-"blue"
+      color[which(congResults$PVI=="R+")]<-"red"
+      
+    }
+    else if(input$whatData=="PVInum"){
+      color<-colorBin()
     }
     else{
     color <- colorBin(input$chooseColor, cong$Ot , bins = 8)(cong$Ot)
