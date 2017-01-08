@@ -9,7 +9,7 @@ library(ggplot2)
 library(webshot)
 server<-shinyServer(function(input, output){
   webshot::install_phantomjs()
-  #IMPORT DATA
+  #IMPORT DATA OK
   output$text1<-renderText({ "research the 2016 election using custom metrics and color schemes"})
   output$text2<-renderText({ "for the customt tab , select your area for data and see the heatmap on custom slide work"})
   output$text3<-renderText({ "labels will be added in the label heatmap"})
